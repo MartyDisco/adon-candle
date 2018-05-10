@@ -6,18 +6,28 @@ class Candle {
 		this.Models = Models
 	}
 
-	databaseInsert(options) {
+	fileToDatabase(options) {
 		return new Promise((resolve, reject) => {
-			csv({ delimiter: options.delimiter })
+			csv({ delimiter: options.delimiter || ';' })
 				.fromFile(options.file)
-				.on('json', (line) => {
-					const value = { date: Date.now(), candle: options.candle, ...line }
-					new this.Models[options.type](value).save((err) => { if (err) console.log(err) })
-				})
+				.on('json', line => this.lineToDatabase({ line, ...options }).catch(err => reject(err)))
 				.on('done', (err) => {
 					if (err) return reject(err)
-					return resolve(options)
+					return resolve()
 				})
+		})
+	}
+
+	lineToDatabase(options) {
+		return new Promise((resolve, reject) => {
+			const value = { database: options.database, ...options.line }
+			new this.Models[options.type](value).save((err) => {
+				if (err) {
+					if (options.safe) return reject(err)
+					console.log(err)
+				}
+				return resolve()
+			})
 		})
 	}
 }
