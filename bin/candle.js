@@ -33,7 +33,7 @@ var Candle = function () {
 			var _this = this;
 
 			return new _bluebird2.default(function (resolve, reject) {
-				(0, _csvtojson2.default)({ delimiter: options.delimiter || ';' }).fromFile(options.file).on('json', function (line) {
+				(0, _csvtojson2.default)({ delimiter: options.delimiter || ';' }).fromFile('' + process.cwd() + options.file).on('json', function (line) {
 					return _this.lineToDatabase(_extends({ line: line }, options)).catch(function (err) {
 						return reject(err);
 					});
@@ -50,6 +50,7 @@ var Candle = function () {
 
 			return new _bluebird2.default(function (resolve, reject) {
 				var value = _extends({ database: options.database }, options.line);
+				if (options.date) value.date = Date.now();
 				new _this2.Models[options.type](value).save(function (err) {
 					if (err) {
 						if (options.safe) return reject(err);

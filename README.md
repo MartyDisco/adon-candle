@@ -81,6 +81,7 @@ candle.fileToDatabase({
   , type: // The type of database model to use (from those provided to the class constructor)
   , database: // A valid mongoose ObjectId for reference, default to null
   , delimiter: // The CSV delimiter, default to ';'
+  , date: // Overwrite the 'date' data field with Date.now() if set to true
   , safe: // Reject the promise if set to true and a line contains errors
 })
 ```
