@@ -1,6 +1,6 @@
 {
 	"name": "adon-candle",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"license": "MIT",
 	"author": "Martin PARENT <mparent@adon-immo.com> (https://adon-immo.com)",
 	"description": "A simple file to database parser from CSV - JSON - XML - YAML",
