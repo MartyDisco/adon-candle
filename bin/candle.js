@@ -28,19 +28,34 @@ var Candle = function () {
 	}
 
 	_createClass(Candle, [{
-		key: 'databaseInsert',
-		value: function databaseInsert(options) {
+		key: 'fileToDatabase',
+		value: function fileToDatabase(options) {
 			var _this = this;
 
 			return new _bluebird2.default(function (resolve, reject) {
-				(0, _csvtojson2.default)({ delimiter: options.delimiter }).fromFile(options.file).on('json', function (line) {
-					var value = _extends({ date: Date.now(), candle: options.candle }, line);
-					new _this.Models[options.type](value).save(function (err) {
-						if (err) console.log(err);
+				(0, _csvtojson2.default)({ delimiter: options.delimiter || ';' }).fromFile(options.file).on('json', function (line) {
+					return _this.lineToDatabase(_extends({ line: line }, options)).catch(function (err) {
+						return reject(err);
 					});
 				}).on('done', function (err) {
 					if (err) return reject(err);
-					return resolve(options);
+					return resolve();
+				});
+			});
+		}
+	}, {
+		key: 'lineToDatabase',
+		value: function lineToDatabase(options) {
+			var _this2 = this;
+
+			return new _bluebird2.default(function (resolve, reject) {
+				var value = _extends({ database: options.database }, options.line);
+				new _this2.Models[options.type](value).save(function (err) {
+					if (err) {
+						if (options.safe) return reject(err);
+						console.log(err);
+					}
+					return resolve();
 				});
 			});
 		}
