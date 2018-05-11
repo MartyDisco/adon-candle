@@ -21,7 +21,7 @@
 		"type": "git",
 		"url": "https://github.com/MartyDisco/adon-candle.git"
 	},
-	"main": "bin/parser.js",
+	"main": "bin/candle.js",
 	"scripts": {
 		"transpile": "babel src/candle.mjs -o bin/candle.js",
 		"lint": "eslint . --ext js, mjs, vue || true"
