@@ -43,6 +43,8 @@ const candle = new Candle({ MyModel, MyOtherModel })
 
 ## Useage
 
+#### fileToDatabase()
+
 Assuming you already got a mongoose instance connected to MongoDB and your file uploaded somewhere in your application scope, you should first create a database document to reference all lines for further queries :
 
 ```
@@ -100,6 +102,18 @@ const { Schema } = mongoose
 })
 
 export default mongoose.model('MyModel', mySchema)
+```
+
+#### linesFromDatabase()
+
+To retrieve all lines referencing the same `Database` instance, simply pass a single config object with `database` property
+
+```
+candle.linesFromDatabase({
+  database: // A database object with type and _id property
+})
+  .then(lines => // Do something with your lines)
+  .catch(err => // Treat errors)
 ```
 
 ## Behaviors

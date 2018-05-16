@@ -31,6 +31,15 @@ class Candle {
 			})
 		})
 	}
+
+	linesFromDatabase(options) {
+		return new Promise((resolve, reject) => {
+			this.Models[options.database.type].find({ database: options.database._id }, (err, lines) => {
+				if (err) return reject(err)
+				return resolve(lines)
+			})
+		})
+	}
 }
 
 export default Candle

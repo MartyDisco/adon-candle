@@ -60,6 +60,18 @@ var Candle = function () {
 				});
 			});
 		}
+	}, {
+		key: 'linesFromDatabase',
+		value: function linesFromDatabase(options) {
+			var _this3 = this;
+
+			return new _bluebird2.default(function (resolve, reject) {
+				_this3.Models[options.database.type].find({ database: options.database._id }, function (err, lines) {
+					if (err) return reject(err);
+					return resolve(lines);
+				});
+			});
+		}
 	}]);
 
 	return Candle;
