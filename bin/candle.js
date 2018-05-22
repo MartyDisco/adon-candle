@@ -49,7 +49,8 @@ var Candle = function () {
 			var _this2 = this;
 
 			return new _bluebird2.default(function (resolve, reject) {
-				var value = _extends({ database: options.database }, options.line);
+				var value = options.line;
+				if (options.database) value.database = options.database;
 				if (options.date) value.date = Date.now();
 				new _this2.Models[options.type](value).save(function (err) {
 					if (err) {

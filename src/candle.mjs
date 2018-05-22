@@ -20,7 +20,8 @@ class Candle {
 
 	lineToDatabase(options) {
 		return new Promise((resolve, reject) => {
-			const value = { database: options.database, ...options.line }
+			const value = options.line
+			if (options.database) value.database = options.database
 			if (options.date) value.date = Date.now()
 			new this.Models[options.type](value).save((err) => {
 				if (err) {
