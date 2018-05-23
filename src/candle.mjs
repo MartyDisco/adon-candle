@@ -14,12 +14,17 @@ class Candle {
 
 	fileToDatabase(options) {
 		return new Promise((resolve, reject) => {
+			let _fileToDatabase
 			switch (path.extname(options.file).toLowerCase()) {
-				case '.csv': return this._csvToDatabase(options)
-				case '.json': return this._jsonToDatabase(options)
-				case '.xml': return this._xmlToDatabase(options)
+				case '.csv': _fileToDatabase = opt => this._csvToDatabase(opt)
+					break
+				case '.json': _fileToDatabase = opt => this._jsonToDatabase(opt)
+					break
+				case '.xml': _fileToDatabase = opt => this._xmlToDatabase(opt)
+					break
 				default: return reject(new Error('File type not supported'))
 			}
+			return _fileToDatabase(options).then(() => resolve()).catch(err => reject(err))
 		})
 	}
 
