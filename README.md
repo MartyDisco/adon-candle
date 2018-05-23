@@ -43,7 +43,7 @@ const candle = new Candle({ MyModel, MyOtherModel })
 
 ## Useage
 
-#### fileToDatabase()
+#### fileToDatabase(options)
 
 Assuming you already got a mongoose instance connected to MongoDB and your file uploaded somewhere in your application scope, you should first create a database document to reference all lines for further queries :
 
@@ -72,7 +72,8 @@ import Database from 'path/to/models/Database'
 
 const { ObjectId } = mongoose.Types
 
-new Database({ _id: ObjectId(), type: 'MyModel' }).save(err => // Treat errors) 
+new Database({ _id: ObjectId(), type: 'MyModel' }).save(err => // Treat errors)
+  .then(database => // You can use database
 ```
 
 Then provide a single object to the `fileToDatabase` function with the following properties :
@@ -82,9 +83,10 @@ candle.fileToDatabase({
   file: // The path to your file
   , type: // The type of database model to use (from those provided to the class constructor)
   , database: // A valid mongoose ObjectId for reference, default to null
-  , delimiter: // The CSV delimiter, default to ';'
   , date: // Overwrite the 'date' data field with Date.now() if set to true
   , safe: // Reject the promise if set to true and a line contains errors
+  , delimiter: // The CSV delimiter, default to ';'
+  , root: // The XML root path to lines, default to 'root.line'
 })
 ```
 
@@ -104,25 +106,43 @@ const { Schema } = mongoose
 export default mongoose.model('MyModel', mySchema)
 ```
 
-#### linesFromDatabase()
+#### linesFromDatabase(options)
 
 To retrieve all lines referencing the same `Database` instance, simply pass a single config object with `database` property
 
 ```
 candle.linesFromDatabase({
-  database: // A database object with type and _id property
+  type: // The type of database model to use (from those provided to the class constructor)
+  , database: // A valid mongoose ObjectId 
 })
   .then(lines => // Do something with your lines)
   .catch(err => // Treat errors)
 ```
 
+#### removeFromDatabase(options)
+
+This function is called by `fileToDatabase()` if an error occur on any lines and the `safe` property is set to true. You can also call it to remove all lines associated to a `database` :
+
+```
+candle.removeFromDatabase({
+  type: // The type of database model to use (from those provided to the class constructor)
+  , database: // A valid mongoose ObjectId 
+})
+  .then(() => // All lines are removed)
+  .catch(err => // Treat errors)
+```
+
 ## Behaviors
 
-The file format will be automatically detected by its extension (CSV - JSON - XML - YAML and maybe XLS)
+The file format is automatically detected by its extension (currently CSV, JSON and XML).
 
-A cleaning operation removing all saved lines in case the `safe` property is set to true and a line does not match its model will be added
+A cleaning operation removing all saved lines in case the `safe` property is set to true and a line does not match its model is performed.
 
-The reverse operation `databaseToFile` will be added
+## Coming Soon
+
+- YAML and XLS format
+
+- Reverse operation `databaseToFile`
 
 ## Dependencies
 
