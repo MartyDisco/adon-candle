@@ -72,8 +72,9 @@ import Database from 'path/to/models/Database'
 
 const { ObjectId } = mongoose.Types
 
-new Database({ _id: ObjectId(), type: 'MyModel' }).save(err => // Treat errors)
+new Database({ _id: ObjectId(), type: 'MyModel' }).save()
   .then(database => // You can use database
+  .catch(err => // Treat errors)
 ```
 
 Then provide a single object to the `fileToDatabase` function with the following properties :
