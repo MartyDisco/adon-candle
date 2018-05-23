@@ -43,7 +43,7 @@ class Candle {
 		return new Promise((resolve, reject) => {
 			fsAsync.readFileAsync(`${process.cwd()}${options.file}`, 'utf8')
 				.then(data => JSON.parse(data)
-					.reduce((promises, line) => this._lineToDatabase({ line, ...options })), Promise.resolve())
+					.reduce((promises, line) => this._lineToDatabase({ line, ...options }), Promise.resolve()))
 				.then(() => resolve())
 				.catch(err => reject(err))
 		})

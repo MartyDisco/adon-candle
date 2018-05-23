@@ -49,11 +49,11 @@ var Candle = function () {
 
 			return new _bluebird2.default(function (resolve, reject) {
 				switch (_path2.default.extname(options.file).toLowerCase()) {
-					case 'csv':
+					case '.csv':
 						return _this._csvToDatabase(options);
-					case 'json':
+					case '.json':
 						return _this._jsonToDatabase(options);
-					case 'xml':
+					case '.xml':
 						return _this._xmlToDatabase(options);
 					default:
 						return reject(new Error('File type not supported'));
@@ -87,8 +87,8 @@ var Candle = function () {
 				fsAsync.readFileAsync('' + process.cwd() + options.file, 'utf8').then(function (data) {
 					return JSON.parse(data).reduce(function (promises, line) {
 						return _this3._lineToDatabase(_extends({ line: line }, options));
-					});
-				}, _bluebird2.default.resolve()).then(function () {
+					}, _bluebird2.default.resolve());
+				}).then(function () {
 					return resolve();
 				}).catch(function (err) {
 					return reject(err);
