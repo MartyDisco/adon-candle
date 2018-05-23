@@ -48,31 +48,28 @@ var Candle = function () {
 			var _this = this;
 
 			return new _bluebird2.default(function (resolve, reject) {
-				var _fileToDatabase = void 0;
 				switch (_path2.default.extname(options.file).toLowerCase()) {
 					case '.csv':
-						_fileToDatabase = function _fileToDatabase(opt) {
-							return _this._csvToDatabase(opt);
-						};
-						break;
+						return _this._csvToDatabase(options).then(function () {
+							return resolve();
+						}).catch(function (err) {
+							return reject(err);
+						});
 					case '.json':
-						_fileToDatabase = function _fileToDatabase(opt) {
-							return _this._jsonToDatabase(opt);
-						};
-						break;
+						return _this._jsonToDatabase(options).then(function () {
+							return resolve();
+						}).catch(function (err) {
+							return reject(err);
+						});
 					case '.xml':
-						_fileToDatabase = function _fileToDatabase(opt) {
-							return _this._xmlToDatabase(opt);
-						};
-						break;
+						return _this._xmlToDatabase(options).then(function () {
+							return resolve();
+						}).catch(function (err) {
+							return reject(err);
+						});
 					default:
 						return reject(new Error('File type not supported'));
 				}
-				return _fileToDatabase(options).then(function () {
-					return resolve();
-				}).catch(function (err) {
-					return reject(err);
-				});
 			});
 		}
 	}, {
