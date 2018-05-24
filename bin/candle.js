@@ -48,28 +48,22 @@ var Candle = function () {
 			var _this = this;
 
 			return new _bluebird2.default(function (resolve, reject) {
-				switch (_path2.default.extname(options.file).toLowerCase()) {
-					case '.csv':
-						return _this._csvToDatabase(options).then(function () {
-							return resolve();
-						}).catch(function (err) {
-							return reject(err);
-						});
-					case '.json':
-						return _this._jsonToDatabase(options).then(function () {
-							return resolve();
-						}).catch(function (err) {
-							return reject(err);
-						});
-					case '.xml':
-						return _this._xmlToDatabase(options).then(function () {
-							return resolve();
-						}).catch(function (err) {
-							return reject(err);
-						});
-					default:
-						return reject(new Error('File type not supported'));
-				}
+				_bluebird2.default.try(function () {
+					switch (_path2.default.extname(options.file).toLowerCase()) {
+						case '.csv':
+							return _this._csvToDatabase(options);
+						case '.json':
+							return _this._jsonToDatabase(options);
+						case '.xml':
+							return _this._xmlToDatabase(options);
+						default:
+							return reject(new Error('File type not supported'));
+					}
+				}).then(function () {
+					return resolve();
+				}).catch(function (err) {
+					return reject(err);
+				});
 			});
 		}
 	}, {
@@ -78,7 +72,7 @@ var Candle = function () {
 			var _this2 = this;
 
 			return new _bluebird2.default(function (resolve, reject) {
-				(0, _csvtojson2.default)({ delimiter: options.delimiter || ';' }).fromFile('' + process.cwd() + options.file).on('json', function (line) {
+				(0, _csvtojson2.default)({ delimiter: options.delimiter || ';' }).fromFile('' + process.cwd() + options.file).then('json', function (line) {
 					_this2._lineToDatabase(_extends({ line: line }, options)).then(function (err) {
 						if (err) console.log(err);
 					}).catch(function (err) {
@@ -97,8 +91,10 @@ var Candle = function () {
 
 			return new _bluebird2.default(function (resolve, reject) {
 				fsAsync.readFileAsync('' + process.cwd() + options.file, 'utf8').then(function (data) {
-					return JSON.parse(data).reduce(function (promises, line) {
-						return _this3._lineToDatabase(_extends({ line: line }, options));
+					return JSON.parse(data).reduce(function (promise, line) {
+						return _this3._lineToDatabase(_extends({ line: line }, options)).then(function (err) {
+							if (err) console.log(err);
+						});
 					}, _bluebird2.default.resolve());
 				}).then(function () {
 					return resolve();
@@ -116,10 +112,10 @@ var Candle = function () {
 				fsAsync.readFileAsync('' + process.cwd() + options.file, 'utf8').then(function (data) {
 					return xmlAsync.parseStringAsync(data);
 				}).then(function (json) {
-					return json[options.root ? options.root : 'root.line'].reduce(function (promises, line) {
+					return json[options.root ? options.root : 'root.line'].reduce(function (promise, line) {
 						return _this4._lineToDatabase(_extends({ line: line }, options));
-					});
-				}, _bluebird2.default.resolve()).then(function () {
+					}, _bluebird2.default.resolve());
+				}).then(function () {
 					return resolve();
 				}).catch(function (err) {
 					return reject(err);

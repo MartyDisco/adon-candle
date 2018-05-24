@@ -849,7 +849,7 @@ cross-spawn@^5.1.0:
     shebang-command "^1.2.0"
     which "^1.2.9"
 
-csvtojson@^1.1.12:
+csvtojson@1.1.12:
   version "1.1.12"
   resolved "https://registry.yarnpkg.com/csvtojson/-/csvtojson-1.1.12.tgz#3872eef9588080f74c222ffe53cfdd416f9bb7d5"
   dependencies:
