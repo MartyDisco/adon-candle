@@ -72,7 +72,7 @@ var Candle = function () {
 			var _this2 = this;
 
 			return new _bluebird2.default(function (resolve, reject) {
-				(0, _csvtojson2.default)({ delimiter: options.delimiter || ';' }).fromFile('' + process.cwd() + options.file).then('json', function (line) {
+				(0, _csvtojson2.default)({ delimiter: options.delimiter || ';' }).fromFile('' + process.cwd() + options.file).on('json', function (line) {
 					_this2._lineToDatabase(_extends({ line: line }, options)).then(function (err) {
 						if (err) console.log(err);
 					}).catch(function (err) {

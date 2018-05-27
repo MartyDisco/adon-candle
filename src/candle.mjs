@@ -31,7 +31,7 @@ class Candle {
 		return new Promise((resolve, reject) => {
 			csv({ delimiter: options.delimiter || ';' })
 				.fromFile(`${process.cwd()}${options.file}`)
-				.then('json', (line) => {
+				.on('json', (line) => {
 					this._lineToDatabase({ line, ...options })
 						.then((err) => { if (err) console.log(err) })
 						.catch(err => reject(err))
