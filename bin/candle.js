@@ -73,7 +73,7 @@ var Candle = function () {
 
 			return new _bluebird2.default(function (resolve, reject) {
 				(0, _csvtojson2.default)({ delimiter: options.delimiter || ';' }).fromFile('' + process.cwd() + options.file).on('json', function (line) {
-					_this2._lineToDatabase(_extends({ line: line }, options)).then(function (err) {
+					_this2._lineToDatabase(_extends({}, options, { line: line })).then(function (err) {
 						if (err) console.log(err);
 					}).catch(function (err) {
 						return reject(err);
@@ -92,7 +92,7 @@ var Candle = function () {
 			return new _bluebird2.default(function (resolve, reject) {
 				fsAsync.readFileAsync('' + process.cwd() + options.file, 'utf8').then(function (data) {
 					return JSON.parse(data).reduce(function (promise, line) {
-						return _this3._lineToDatabase(_extends({ line: line }, options)).then(function (err) {
+						return _this3._lineToDatabase(_extends({}, options, { line: line })).then(function (err) {
 							if (err) console.log(err);
 						});
 					}, _bluebird2.default.resolve());
@@ -113,7 +113,7 @@ var Candle = function () {
 					return xmlAsync.parseStringAsync(data);
 				}).then(function (json) {
 					return json[options.root ? options.root : 'root.line'].reduce(function (promise, line) {
-						return _this4._lineToDatabase(_extends({ line: line }, options));
+						return _this4._lineToDatabase(_extends({}, options, { line: line }));
 					}, _bluebird2.default.resolve());
 				}).then(function () {
 					return resolve();
@@ -128,10 +128,9 @@ var Candle = function () {
 			var _this5 = this;
 
 			return new _bluebird2.default(function (resolve, reject) {
-				var line = _extends({
-					database: options.database ? options.database : null,
+				var line = _extends({}, options.line, { database: options.database ? options.database : null,
 					date: options.date ? Date.now() : null
-				}, options.line);
+				});
 				return new _this5.Models[options.type](line).save().then(function () {
 					return resolve();
 				}).catch(function (err) {

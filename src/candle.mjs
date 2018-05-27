@@ -32,7 +32,7 @@ class Candle {
 			csv({ delimiter: options.delimiter || ';' })
 				.fromFile(`${process.cwd()}${options.file}`)
 				.on('json', (line) => {
-					this._lineToDatabase({ line, ...options })
+					this._lineToDatabase({ ...options, line })
 						.then((err) => { if (err) console.log(err) })
 						.catch(err => reject(err))
 				})
@@ -47,7 +47,7 @@ class Candle {
 		return new Promise((resolve, reject) => {
 			fsAsync.readFileAsync(`${process.cwd()}${options.file}`, 'utf8')
 				.then(data => JSON.parse(data).reduce(
-					(promise, line) => this._lineToDatabase({ line, ...options })
+					(promise, line) => this._lineToDatabase({ ...options, line })
 						.then((err) => { if (err) console.log(err) })
 					, Promise.resolve()
 				))
@@ -61,7 +61,7 @@ class Candle {
 			fsAsync.readFileAsync(`${process.cwd()}${options.file}`, 'utf8')
 				.then(data => xmlAsync.parseStringAsync(data))
 				.then(json => json[options.root ? options.root : 'root.line'].reduce(
-					(promise, line) => this._lineToDatabase({ line, ...options })
+					(promise, line) => this._lineToDatabase({ ...options, line })
 					, Promise.resolve()
 				))
 				.then(() => resolve())
@@ -72,9 +72,9 @@ class Candle {
 	_lineToDatabase(options) {
 		return new Promise((resolve, reject) => {
 			const line = {
-				database: options.database ? options.database : null
+				...options.line
+				, database: options.database ? options.database : null
 				, date: options.date ? Date.now() : null
-				, ...options.line
 			}
 			return new this.Models[options.type](line).save()
 				.then(() => resolve())
