@@ -86,7 +86,7 @@ candle.fileToDatabase({
   , database: // A valid mongoose ObjectId for reference, default to null
   , date: // Overwrite the 'date' data field with Date.now() if set to true
   , safe: // Reject the promise if set to true and a line contains errors
-  , delimiter: // The CSV delimiter, default to ';'
+  , delimiter: // The CSV delimiter, default to ','
   , root: // The XML root path to lines, default to 'root.line'
 })
 ```

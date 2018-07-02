@@ -29,7 +29,7 @@ class Candle {
 
 	_csvToDatabase(options) {
 		return new Promise((resolve, reject) => {
-			csv({ delimiter: options.delimiter || ';' })
+			csv({ delimiter: options.delimiter || ',' })
 				.fromFile(`${process.cwd()}${options.file}`)
 				.on('json', (line) => {
 					this._lineToDatabase({ ...options, line })
